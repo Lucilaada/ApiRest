@@ -102,6 +102,12 @@ public class Cuenta {
     public void setMovimientos(List<Movimiento> movimientos) {
         this.movimientos = movimientos;
     }
+
+    public Cuenta(Billetera b, String moneda) {
+        this.moneda = moneda;
+        this.billetera = b;
+        b.getCuentas().add(this);
+    }
 /*
     @Id
     @Column(name = "cuenta_id")

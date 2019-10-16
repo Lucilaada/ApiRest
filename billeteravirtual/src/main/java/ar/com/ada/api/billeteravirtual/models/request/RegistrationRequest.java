@@ -9,5 +9,6 @@ public class RegistrationRequest {
 	public String email;
 	public int edad;
 	public String password;
+	public String moneda;
 
 }

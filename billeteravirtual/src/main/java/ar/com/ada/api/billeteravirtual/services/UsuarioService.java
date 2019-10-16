@@ -21,32 +21,54 @@ import ar.com.ada.api.billeteravirtual.security.Crypto;
 public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
+    @Autowired
+    PersonaService personaService;
+    @Autowired
+    BilleteraService billeteraService;
+    @Autowired
+    CuentaService cuentaService;
 
-    public int crearUsuario(String nombre, String dni, Integer edad, String email, String password) {
+    public int alta(String nombre, String dni, String email, Integer edad, String password, String moneda, String userEmail) {
+        Persona p = new Persona();
+        p.setNombre(nombre);
+        p.setEmail(email);
+        p.setDni(dni);
+        try {
+            p.setEdad(edad);
+        } catch (PersonaEdadException e) {
+            e.printStackTrace();
+        }
+
         Usuario u = new Usuario();
-        u.setUserEmail(email);
-        u.setUserName(email);
+        u.setUserEmail(p.getEmail());
+        u.setUsername(p.getEmail());
+
         String passwordEnTextoClaro;
         String passwordEncriptada;
         String passwordEnTextoClaroDesencriptado;
+
         passwordEnTextoClaro = password;
-        passwordEncriptada = Crypto.encrypt(passwordEnTextoClaro, u.getUserName());
-        passwordEnTextoClaroDesencriptado = Crypto.decrypt(passwordEncriptada, u.getUserName());
+        passwordEncriptada = Crypto.encrypt(passwordEnTextoClaro, u.getUsername());
+        passwordEnTextoClaroDesencriptado = Crypto.decrypt(passwordEncriptada, u.getUsername());
         if (passwordEnTextoClaro.equals(passwordEnTextoClaroDesencriptado)) {
             u.setPassword(passwordEncriptada);
-            Persona p = new Persona();
-            p.setNombre(nombre);
-            p.setEmail(email);
-            p.setDni(dni);
-            try {
-                p.setEdad(edad);
-            } catch (PersonaEdadException e) {
-                e.printStackTrace();
-            }
-            Billetera b = new Billetera();
-            Cuenta c = new Cuenta();
-            b.agregarCuenta(c);
-            usuarioRepository.save(u);
+            p.setUsuario(u);
+            personaService.save(p);
+
+            Billetera b = new Billetera(p);
+            Cuenta c = new Cuenta(b, moneda);
+            //b.agregarCuenta(c);
+            //usuarioRepository.save(u);
+          //  c.setMoneda("ARS");
+
+            c.setBilletera(b);
+          //  cuentaService.save(c);
+           // b.agregarCuenta(c);
+            billeteraService.save(b);
+
+            personaService.save(p);
+
+            return u.getUsuarioId();
 
         } else {
         }
@@ -57,7 +79,6 @@ public class UsuarioService {
 
         return usuarioRepository.findAll();
     }
-
 
     public Usuario buscarPorId(int id) {
 
@@ -73,8 +94,8 @@ public class UsuarioService {
 
     }
 
-    public Usuario buscarPorEmail(String email){
-    
+    public Usuario buscarPorEmail(String email) {
+
         return usuarioRepository.findByUserEmail(email);
     }
 

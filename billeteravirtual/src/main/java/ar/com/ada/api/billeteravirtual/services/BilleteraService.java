@@ -43,4 +43,7 @@ public class BilleteraService {
         return b.cuentaPrincipal().getSaldo();
     }
 
+    public Billetera save(Billetera b){
+        return billeteraRepository.save(b);
+    }
 }

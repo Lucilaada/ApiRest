@@ -1,5 +1,6 @@
 package ar.com.ada.api.billeteravirtual.entities;
 
+import java.math.BigDecimal;
 import java.util.*;
 import javax.persistence.*;
 
@@ -19,7 +20,7 @@ public class Cuenta {
    // @Column(name = "numero_cuenta")
     //private int numeroCuenta;
     private double saldo;
-    @Column(name = "dinero_disponible")
+    @Column(name = "saldo_disponible")
     private double dineroDisponible;
     private String moneda;
 
@@ -41,15 +42,6 @@ public class Cuenta {
     public void setBilletera(Billetera billetera) {
         this.billetera = billetera;
     }
-
-
-  /*  public int getNumeroCuenta() {
-        return numeroCuenta;
-    }
-
-    public void setNumeroCuenta(int numeroCuenta) {
-        this.numeroCuenta = numeroCuenta;
-    }*/
 
     public double getSaldo() {
         return saldo;
@@ -108,110 +100,32 @@ public class Cuenta {
         this.billetera = b;
         b.getCuentas().add(this);
     }
-/*
-    @Id
-    @Column(name = "cuenta_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int cuentaId;
-    private String moneda;
-    private double saldo;
-    @Column(name = "saldo_disponible")
-    private double saldoDisponible;
-    // private String nroCuenta; // (univoco)
+    public void movimientoTransferencia(int usuarioDe, String concepto, BigDecimal importe, String detalle) {
+        Movimiento m = new Movimiento();
+        m.setCuenta(this);
+        m.setTipoOperacion("INGRESO");
+        m.setImporte(importe);
+        m.setConceptoOperacion(concepto);
+        m.setDetalle(detalle);
+        m.setFechaMovimiento(new Date());
+        m.setDeUsuario(usuarioDe);
+        m.setaUsuario(usuarioDe);
+        m.setCuentaDestinatarioId(this.cuentaId);
+        m.setCuentaOrigenId(this.cuentaId);
 
-    @ManyToOne
-    @JoinColumn(name = "billetera_id", referencedColumnName = "billetera_id")
-    private Billetera billetera;
-
-    @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Movimiento> movimientos = new ArrayList<Movimiento>(); // (puede necesitar tabla intermedia)
-
-    public Cuenta(int cuentaId, String moneda) {
-        this.cuentaId = cuentaId;
-        this.moneda = moneda;
+       /*Movimiento m = new Movimiento();
+        m.setTipoOperacion("Salida");
+        m.setConceptoOperacion("Transferencia");
+        m.setDetalle("Transferencia");
+        m.setEstado("Activo");
+        m.setImporte(importe);
+        m.setFechaMovimiento(new Date());
+        m.setDeUsuario(usuarioOrigen.getUsuarioId());
+        m.setaUsuario(usuarioDestino.getUsuarioId());
+        m.setCuentaOrigenId(usuarioOrigen.getPersona().getPersonaId());
+        m.setCuentaDestinatarioId(usuarioDestino.getPersona().getPersonaId());
+        this.cuentas.get(0).agregarMovimiento(m);
+        m.setCuenta(this.cuentas.get(0));*/
+        this.movimientos.add(m);
     }
-
-    public Cuenta() {
-    }
-
-    public int getCuentaId() {
-        return cuentaId;
-    }
-
-    public void setCuentaId(int cuentaId) {
-        this.cuentaId = cuentaId;
-    }
-
-    public String getMoneda() {
-        return moneda;
-    }
-
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
-    }
-
-    public double getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
-
-    public Billetera getBilletera() {
-        return billetera;
-    }
-
-    public void setBilletera(Billetera billetera) {
-        this.billetera = billetera;
-        this.billetera.getCuentas().add(this);
-    }
-
-    public List<Movimiento> getMovimientos() {
-        return movimientos;
-    }
-
-    public void setMovimientos(List<Movimiento> movimientos) {
-        this.movimientos = movimientos;
-    }
-
-    public double getSaldoDisponible() {
-        return saldo;
-    }
-
-    public void setSaldoDisponible(double saldoDisponible) {
-        this.saldoDisponible = saldoDisponible;
-    }
-
- /*   public Cuenta(Billetera b) {
-        System.out.println("Creacion de cuenta. Seleccione la moneda: \n1: U$S \n2: AR$");
-        int opcionMoneda = Teclado.nextInt();
-        switch (opcionMoneda) {
-        case 1:
-            this.setMoneda("U$S");
-            break;
-        case 2:
-            this.setMoneda("AR$");
-            break;
-        default:
-            break;
-        }*/
-
-    
-
-  /*  public Usuario getUsuario() {
-
-        Usuario u = this.getBilletera().getPersona().getUsuario();
-        return u;
-
-    }
-
-    public void agregarMovimiento(Movimiento movimiento) {
-        this.movimientos.add(movimiento);
-        movimiento.setCuenta(this);
-        this.setSaldo(this.getSaldo() + movimiento.getImporte());
-        this.setSaldoDisponible(this.getSaldo());
-    }*/
-
 }

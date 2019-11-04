@@ -1,5 +1,6 @@
 package ar.com.ada.api.billeteravirtual.services;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class BilleteraService {
 
     }
 
-    public void crearTransferencia(Double importe, Integer billeteraIdOrigen, String emailDestino) {
+   /* public void crearTransferencia(Double importe, Integer billeteraIdOrigen, String emailDestino) {
         Billetera b = billeteraRepository.findById(billeteraIdOrigen).get();
         Usuario u = usuarioService.buscarPorEmail(emailDestino);
         u.getPersona().getBilletera();
@@ -36,6 +37,13 @@ public class BilleteraService {
         billeteraRepository.save(b);
         billeteraRepository.save(u.getPersona().getBilletera());
 
+    }*/
+    public void transferencia (Billetera deBilletera, String email ,BigDecimal plata, String moneda, String concepto, String detalle){
+        Billetera aBilletera;
+
+        aBilletera = usuarioService.buscarPorEmail(email).getPersona().getBilletera();
+        deBilletera.movimientoTransferencia(concepto,moneda,
+        detalle);
     }
 
     public double consultarSaldo(Integer billeteraId) {

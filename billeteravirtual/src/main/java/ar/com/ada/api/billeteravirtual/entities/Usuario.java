@@ -18,6 +18,7 @@ public class Usuario {
     private String username;
     @Column(name = "contrasenia")
     private String password;
+    @Column (name = "email")
     private String userEmail;
 
     @JsonIgnore

@@ -1,5 +1,6 @@
 package ar.com.ada.api.billeteravirtual.entities;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import javax.persistence.*;
@@ -22,7 +23,7 @@ public class Movimiento {
     @Column(name = "concepto_operacion")
     private String conceptoOperacion;
     private String detalle;
-    private Integer estado;
+    private String estado;
     private double importe;
     @Column(name = "cuenta_origen_id")
     private Integer cuentaOrigenId;
@@ -44,7 +45,7 @@ public class Movimiento {
         return importe;
     }
 
-    public void setImporte(double importe) {
+    public void setImporte(BigDecimal importe2) {
         this.importe = importe;
     }
 
@@ -80,11 +81,11 @@ public class Movimiento {
         this.detalle = detalle;
     }
 
-    public Integer getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(Integer estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 

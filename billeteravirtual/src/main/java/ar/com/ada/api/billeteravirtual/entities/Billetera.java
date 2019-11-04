@@ -1,5 +1,6 @@
 package ar.com.ada.api.billeteravirtual.entities;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import javax.persistence.*;
@@ -60,23 +61,28 @@ public class Billetera {
         cuentas.add(cuenta);
     }
 
-    public void movimientoTransferencia(double importe, Usuario usuarioOrigen, Usuario usuarioDestino) {
-        Movimiento m = new Movimiento();
-        m.setTipoOperacion("Salida");
-        m.setConceptoOperacion("Transferencia");
-        m.setDetalle("Transferencia");
-        m.setEstado(0);
-        m.setImporte(importe);
-        m.setFechaMovimiento(new Date());
-        m.setDeUsuario(usuarioOrigen.getUsuarioId());
-        m.setaUsuario(usuarioDestino.getUsuarioId());
-        m.setCuentaOrigenId(usuarioOrigen.getPersona().getPersonaId());
-        m.setCuentaDestinatarioId(usuarioDestino.getPersona().getPersonaId());
-        this.cuentas.get(0).agregarMovimiento(m);
+    private Cuenta buscarCuenta(String moneda) {
+        for (Cuenta cta : this.cuentas) {
+            if (moneda.equals(cta.getMoneda())) {
+                return cta;
+            }
+
+        }
+
+        return null;
     }
-    
+
+    public void agregarPlata(BigDecimal plata, String moneda, String concepto, String detalle) {
+        // Agarro el primero y le meto plata (esto se hacia antes porqeu le agregaba a
+        // la primer cuenta)
+        this.buscarCuenta(moneda).movimientoTransferencia(persona.getUsuario().getUsuarioId(), concepto, plata,
+                detalle);
+
+    }
+
     public Billetera(Persona p) {
         this.setPersona(p);
         p.setBilletera(this);
     }
+
 }

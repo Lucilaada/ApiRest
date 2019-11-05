@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import ar.com.ada.api.fiflix.fiflix.services.JWTUserDetailsService;
@@ -20,6 +21,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 /**
  * JWTRequestFilter
  */
+@Component
 public class JWTRequestFilter extends OncePerRequestFilter {
 
     @Autowired
